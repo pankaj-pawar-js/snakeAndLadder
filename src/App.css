@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+.row{
+  height: 70px;
+  display: flex;
+}
+.cell{
+  height: 50px;
+  width: 50px;
+  padding: 10px;
+  border: 1px solid black;
+  display: inline-block;
+}
+
+.S{
+  color: red;
+}
+
+.L{
+  color: green;
+}

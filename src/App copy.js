@@ -19,13 +19,13 @@ function Marker(init){
 
 
 function Huddles(start, end){
-  this.start = {x: 1, y:0} || {x:getRandomNumber(SIZE),y:getRandomNumber(SIZE)};
-  this.end = {x: 1, y:4} || {x:getRandomNumber(SIZE),y:getRandomNumber(SIZE)};
+  this.start = start || {x:getRandomNumber(SIZE),y:getRandomNumber(SIZE)};
+  this.end = end || {x:getRandomNumber(SIZE),y:getRandomNumber(SIZE)};
 }
 
 
 const markerObj = new Marker();
-const allHuddles = [ new Huddles()];
+const allHuddles = [ new Huddles(), new Huddles()];
 
 console.log("allSnales : ", allHuddles);
 
@@ -34,20 +34,8 @@ function Board(props) {
   const [diceNumber, setDiceNumber] = useState(null);
   const [boardState, setBoardState] = useState( () => {
     const arr = new Array(size).fill([]);
-    return arr.map( v => new Array(size).fill({display: ""}) );
+    return arr.map( v => new Array(size).fill("") );
   } );
-
-  /*
-  {
-    display: "",
-    type: 'P' | 'S' | 'L' | ""
-    pos: {
-      start: {x,y},
-      end: {x,y}
-    }
-  }
-  
-  */
 
   
   useEffect( () => {
@@ -57,20 +45,9 @@ function Board(props) {
       markerObj.move(diceNumber);
       newMp = markerObj.position;
     }
-
-    // if ladder is present
-    const cell = boardState[newMp.y][newMp.x];
-    if(cell.type === 'L'){
-      newMp.y = cell.pos.end.y;
-      newMp.x = cell.pos.end.x;
-    } else if(cell.type === 'S'){
-      newMp.y = cell.pos.start.y;
-      newMp.x = cell.pos.start.x;
-    }
-
     setBoardState( (prev) => {
-      prev[mp.y][mp.x] = {display: "", type:""};
-      prev[newMp.y][newMp.x] = {display : "P", type: "P"};
+      prev[mp.y][mp.x] = "";
+      prev[newMp.y][newMp.x] = "P";
 
       return [...prev];
     } );
@@ -87,8 +64,8 @@ function Board(props) {
           type = "L"
         } 
         
-        prev[h.start.y][h.start.x] = {display: `${type}_${i}_start`, type, pos: h};
-        prev[h.end.y][h.end.x] ={display:  `${type}_${i}_end`, type, pos: h};
+        prev[h.start.y][h.start.x] = `${type}_${i}_start`;
+        prev[h.end.y][h.end.x] = `${type}_${i}_end`;
       } );
       
 
@@ -98,7 +75,7 @@ function Board(props) {
 
   const handleClick = (e) => {
     const number = getRandomNumber(6);
-    setDiceNumber(1)
+    setDiceNumber(number)
   }
 
   const createBoard = () => {
@@ -107,7 +84,7 @@ function Board(props) {
     for(let i=0;i<size;i++){
       const temp = [];
       for(let j=0;j<size;j++){
-        temp.push( <span key={`col-${i}-${j}`} className={`cell ${boardState[i][j].type}`}> {boardState[i][j].display} </span>);
+        temp.push( <span key={`col-${i}-${j}`} className="cell"> {boardState[i][j]} </span>);
       }
       arr.push(<div key={`row-${i}`} className="row">{temp}</div>);
     }
